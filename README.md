@@ -1,2 +1,2 @@
-# aws-eks-deployment
-Juno Innovations Official AWS EKS Deployment IAC using Pulumi
+# aws-eks-infrastructure
+Provision AWS infrastructure for Orion
