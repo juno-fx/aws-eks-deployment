@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.prefix }}bootstrap
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  sources:
+    - path: {{ .Values.path }}
+      repoURL: {{ .Values.repository }}
+      targetRevision: main
+      helm:
+        parameters:
+          - name: region
+            value: {{ .Values.region }}
+          - name: file_system
+            value: {{ .Values.file_system }}
+          - name: account
+            value: {{ .Values.account }}
+          - name: subnet
+            value: {{ .Values.subnet }}
+          - name: account_id
+            value: "{{ .Values.account_id }}"
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,13 @@
+line-length = 100
+
+[lint]
+select = ["PL"]
+extend-ignore = [
+    "F403",
+    "PLR2004",
+    "PLR0913",
+    "PLW0603",
+    "PLW0602"
+]
+
+
