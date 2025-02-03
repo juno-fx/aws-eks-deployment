@@ -34,7 +34,7 @@ set_repositories([
 ])
 
 
-# # account and regional deployments
+# account and regional deployments
 with JunoAccount("deployment_account_name"):
     with JunoRegion("us-east-1", ecr_master=True):
         with Cluster('192.168.0.0') as cluster:
