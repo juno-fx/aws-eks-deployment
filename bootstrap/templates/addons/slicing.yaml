@@ -1,9 +1,9 @@
-{{/*# https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-sharing.html#configuration*/}}
-{{/*apiVersion: v1*/}}
-{{/*kind: ConfigMap*/}}
-{{/*metadata:*/}}
-{{/*  name: time-slicing-config*/}}
-{{/*  namespace: gpu-operator*/}}
-{{/*data:*/}}
-{{/*  any: |-*/}}
-{{/*    {{ .Values.gpuSlicingConfig | toYaml | nindent 4 }}*/}}
+# https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-sharing.html#configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: time-slicing-config
+  namespace: gpu-operator
+data:
+  any: |-
+    {{ .Values.gpuSlicingConfig | toYaml | nindent 4 }}

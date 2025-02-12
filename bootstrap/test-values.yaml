@@ -9,7 +9,10 @@ projects:
         branch: v1.1
 
 
-domain: example.com
+# add ons
+ingress: false
+gpu_operator: false
+autoscaler: false
 
 # DO NOT CHANGE
 

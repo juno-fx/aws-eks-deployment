@@ -11,6 +11,12 @@ projects:
 
 # BOOTSTRAP CONFIGURATION
 
+# add ons
+ingress: true
+headlamp: true
+gpu_operator: true
+autoscaler: true
+
 # specify the domain that the ingress will listen on i.e. "junovfx.com"
 domain:
 

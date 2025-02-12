@@ -1,3 +1,5 @@
+{{- if .Values.headlamp }}
+{{- if .Values.ingress }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -16,3 +18,5 @@ spec:
                 name: headlamp
                 port:
                   name: http
+{{- end }}
+{{- end }}
