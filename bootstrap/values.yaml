@@ -1,3 +1,14 @@
+# PROJECTS
+
+projects:
+  us-east-1:
+    - code: BOB
+      active: true
+      guid: 3500
+      orion:
+        branch: v1.1
+
+
 # BOOTSTRAP CONFIGURATION
 
 # specify the domain that the ingress will listen on i.e. "junovfx.com"

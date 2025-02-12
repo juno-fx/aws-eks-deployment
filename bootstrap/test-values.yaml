@@ -1,0 +1,21 @@
+# PROJECTS
+
+projects:
+  us-east-1:
+    - code: BOB
+      active: true
+      guid: 3500
+      orion:
+        branch: v1.1
+
+
+domain: example.com
+
+# DO NOT CHANGE
+
+# injected from pulumi infrastructure. No need to fill these out
+region: "us-east-1"
+file_system: "1234789"
+account: "263151681"
+subnet: "32165181"
+account_id: "23151651"

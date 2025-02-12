@@ -5,4 +5,5 @@ metadata:
   name: time-slicing-config
   namespace: gpu-operator
 data:
-  any: "{{ .Values.gpuSlicingConfig | toYaml | nindent 4 }}"
+  any: |-
+    {{ .Values.gpuSlicingConfig | toYaml | nindent 4 }}
