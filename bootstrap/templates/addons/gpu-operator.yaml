@@ -1,45 +1,45 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: gpu-operator
-  namespace: argocd
-spec:
-  project: default
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: gpu-operator
+{{/*apiVersion: argoproj.io/v1alpha1*/}}
+{{/*kind: Application*/}}
+{{/*metadata:*/}}
+{{/*  name: gpu-operator*/}}
+{{/*  namespace: argocd*/}}
+{{/*spec:*/}}
+{{/*  project: default*/}}
+{{/*  destination:*/}}
+{{/*    server: https://kubernetes.default.svc*/}}
+{{/*    namespace: gpu-operator*/}}
 
-  sources:
-    - repoURL: https://helm.ngc.nvidia.com/nvidia
-      chart: gpu-operator
-      targetRevision: v24.9.0
-      helm:
-        releaseName: gpu-operator
-        parameters:
-          # Not needed for EKS nodes since it is preinstalled
-          - name: "toolkit.version"
-            value: "v1.17.0-ubi8"
-          # Not needed for EKS nodes since it is preinstalled
-          - name: "toolkit.enabled"
-            value: "true"
-          # Not needed for EKS nodes since it is preinstalled
-          - name: "driver.enabled"
-            value: "true"
-          # Time slicing configuration
-          - name: "devicePlugin.config.name"
-            value: "time-slicing-config"
-          - name: "devicePlugin.config.default"
-            value: "any"
-          - name: "driver.useOpenKernelModules"
-            value: "true"
-          - name: "nfd.enabled"
-            value: "true"
+{{/*  sources:*/}}
+{{/*    - repoURL: https://helm.ngc.nvidia.com/nvidia*/}}
+{{/*      chart: gpu-operator*/}}
+{{/*      targetRevision: v24.9.0*/}}
+{{/*      helm:*/}}
+{{/*        releaseName: gpu-operator*/}}
+{{/*        parameters:*/}}
+{{/*          # Not needed for EKS nodes since it is preinstalled*/}}
+{{/*          - name: "toolkit.version"*/}}
+{{/*            value: "v1.17.0-ubi8"*/}}
+{{/*          # Not needed for EKS nodes since it is preinstalled*/}}
+{{/*          - name: "toolkit.enabled"*/}}
+{{/*            value: "true"*/}}
+{{/*          # Not needed for EKS nodes since it is preinstalled*/}}
+{{/*          - name: "driver.enabled"*/}}
+{{/*            value: "true"*/}}
+{{/*          # Time slicing configuration*/}}
+{{/*          - name: "devicePlugin.config.name"*/}}
+{{/*            value: "time-slicing-config"*/}}
+{{/*          - name: "devicePlugin.config.default"*/}}
+{{/*            value: "any"*/}}
+{{/*          - name: "driver.useOpenKernelModules"*/}}
+{{/*            value: "true"*/}}
+{{/*          - name: "nfd.enabled"*/}}
+{{/*            value: "true"*/}}
 
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-      allowEmpty: true
+{{/*  syncPolicy:*/}}
+{{/*    automated:*/}}
+{{/*      prune: true*/}}
+{{/*      selfHeal: true*/}}
+{{/*      allowEmpty: true*/}}
 
-    syncOptions:
-      - CreateNamespace=true
+{{/*    syncOptions:*/}}
+{{/*      - CreateNamespace=true*/}}
