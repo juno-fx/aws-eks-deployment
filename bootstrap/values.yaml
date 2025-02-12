@@ -1,12 +1,13 @@
 # PROJECTS
 
 projects:
-  us-east-1:
-    - code: BOB
-      active: true
-      guid: 3500
-      orion:
-        branch: v1.1
+  - name: BOB
+    active: true
+    guid: 3500
+    region: us-east-1
+    repo: https://github.com/juno-fx/Orion-Deployment.git
+    orion:
+      branch: v1.1
 
 
 # BOOTSTRAP CONFIGURATION
