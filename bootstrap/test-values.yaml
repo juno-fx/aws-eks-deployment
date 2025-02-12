@@ -5,8 +5,8 @@ projects:
     active: false
     guid: 3500
     region: us-east-2
-    repo: https://github.com/juno-fx/Orion-Deployment.git
     orion:
+      repo: https://github.com/juno-fx/Orion-Deployment.git
       branch: v1.1
 
 

@@ -18,7 +18,7 @@ spec:
   sources:
     {{- if .active }}
     - path: .
-      repoURL: {{ .repo }}
+      repoURL: {{ .orion.repo }}
       targetRevision: {{ .orion.branch }}
       helm:
         parameters:
