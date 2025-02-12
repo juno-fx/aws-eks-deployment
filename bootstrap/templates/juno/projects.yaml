@@ -16,7 +16,6 @@ spec:
   # We use the multi source approach to allow for the use of a private values repo
   # https://argo-cd.readthedocs.io/en/stable/user-guide/multiple_sources/
   sources:
-    {{- if .active }}
     - path: .
       repoURL: {{ .orion.repo }}
       targetRevision: {{ .orion.branch }}
@@ -28,7 +27,8 @@ spec:
             value: {{ lower .name }}
           - name: guid
             value: "{{ .guid }}"
-    {{- end }}
+          - name: active
+            value: "{{ .active }}"
 
   syncPolicy:
     automated:
