@@ -13,6 +13,7 @@ projects:
 ingress: false
 gpu_operator: false
 autoscaler: false
+metrics_server: false
 
 # DO NOT CHANGE
 

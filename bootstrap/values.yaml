@@ -16,6 +16,7 @@ ingress: true
 headlamp: true
 gpu_operator: true
 autoscaler: true
+metrics_server: true
 
 # specify the domain that the ingress will listen on i.e. "junovfx.com"
 domain:
