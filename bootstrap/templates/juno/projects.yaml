@@ -1,45 +1,47 @@
-{{/*{{- range $region, $projects := .Values.projects }}*/}}
-{{/*apiVersion: argoproj.io/v1alpha1*/}}
-{{/*kind: Application*/}}
-{{/*metadata:*/}}
-{{/*  name: {{lower .code }}*/}}
-{{/*  namespace: argocd*/}}
-{{/*  finalizers:*/}}
-{{/*    - resources-finalizer.argocd.argoproj.io*/}}
-{{/*spec:*/}}
-{{/*  project: default*/}}
-{{/*  destination:*/}}
-{{/*    server: https://kubernetes.default.svc*/}}
-{{/*    namespace: {{lower .code }}*/}}
+{{- range $region, $projects := .Values.projects }}
+{{- if eq $region $.Values.region }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{lower .code }}
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: {{lower .code }}
 
-{{/*  # We use the multi source approach to allow for the use of a private values repo*/}}
-{{/*  # https://argo-cd.readthedocs.io/en/stable/user-guide/multiple_sources/*/}}
-{{/*  sources:*/}}
-{{/*    {{- if .active }}*/}}
-{{/*    - path: .*/}}
-{{/*      repoURL: https://github.com/juno-fx/Orion-Deployment.git*/}}
-{{/*      targetRevision: {{ .orion.branch }}*/}}
-{{/*      helm:*/}}
-{{/*        parameters:*/}}
-{{/*          - name: show*/}}
-{{/*            value: {{ upper .code }}*/}}
-{{/*          - name: namespace*/}}
-{{/*            value: {{ lower .code }}*/}}
-{{/*          - name: registry*/}}
-{{/*            value: {{ $.Values.registry }}*/}}
-{{/*          - name: guid*/}}
-{{/*            value: "{{ .guid }}"*/}}
-{{/*        valueFiles:*/}}
-{{/*          - $values/projects/{{upper .code }}/settings.yaml*/}}
-{{/*    {{- end }}*/}}
+  # We use the multi source approach to allow for the use of a private values repo
+  # https://argo-cd.readthedocs.io/en/stable/user-guide/multiple_sources/
+  sources:
+    {{- if .active }}
+    - path: .
+      repoURL: https://github.com/juno-fx/Orion-Deployment.git
+      targetRevision: {{ .orion.branch }}
+      helm:
+        parameters:
+          - name: show
+            value: {{ upper .code }}
+          - name: namespace
+            value: {{ lower .code }}
+          - name: registry
+            value: {{ $.Values.registry }}
+          - name: guid
+            value: "{{ .guid }}"
+        valueFiles:
+          - $values/projects/{{upper .code }}/settings.yaml
+    {{- end }}
 
-{{/*  syncPolicy:*/}}
-{{/*    automated:*/}}
-{{/*      prune: true*/}}
-{{/*      selfHeal: true*/}}
-{{/*      allowEmpty: true*/}}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
 
-{{/*    syncOptions:*/}}
-{{/*      - CreateNamespace=true*/}}
-{{/*---*/}}
-{{/*{{- end }}*/}}
+    syncOptions:
+      - CreateNamespace=true
+---
+{{- end }}
+{{- end }}
