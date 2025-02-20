@@ -1,3 +1,4 @@
+{{- if .Values.gpu_operator }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -43,3 +44,4 @@ spec:
 
     syncOptions:
       - CreateNamespace=true
+{{- end }}

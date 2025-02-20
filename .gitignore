@@ -5,6 +5,7 @@ __pycache__/
 *$py.class
 .idea/*
 *.kubeconfig
+*.devbox
 
 # C extensions
 *.so

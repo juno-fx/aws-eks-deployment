@@ -1,20 +1,22 @@
+# Genesis configuration values
+repository: https://github.com/juno-fx/Genesis-Deployment.git     # Repository to pull the Genesis helm chart from
+image_pull_secret:                                                # Image pull secret to use for the project. This is the name of the secret in the namespace
+version:                                                          # Image to pull for Genesis
+env: {}                                                           # Environment variables to set for the Genesis server
+
+
+
 # BOOTSTRAP CONFIGURATION
+
+# add ons
+ingress: true
+headlamp: true
+gpu_operator: true
+autoscaler: true
+metrics_server: true
 
 # specify the domain that the ingress will listen on i.e. "junovfx.com"
 domain:
-
-# ArgoCD Dex config
-# https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#dex
-# argoConfig: |
-#   connectors:
-#   - config:
-#       issuer: https://xxxxxxxxxxx
-#       clientID: xxxxxxx
-#       clientSecret: xxxxxxx
-#     type: oidc
-#     id: xxxx
-#     name: xxxx
-argoConfig:
 
 # nginx certs
 # nginx default cert for ingress <namespace>/<secret>

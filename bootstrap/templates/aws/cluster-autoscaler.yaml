@@ -1,3 +1,4 @@
+{{- if .Values.autoscaler }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -191,3 +192,4 @@ spec:
         - name: ssl-certs
           hostPath:
             path: "/etc/ssl/certs/ca-bundle.crt"
+{{- end }}

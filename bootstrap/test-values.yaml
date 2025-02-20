@@ -1,0 +1,27 @@
+# PROJECTS
+
+# Genesis configuration values
+image_pull_secret:                        # Image pull secret to use for the project. This is the name of the secret in the namespace
+
+image: genesis:v0.0.2                     # Image to pull for Genesis
+env: {}                                   # Environment variables to set for the Genesis server
+node_selector:                            # Node selector to deploy the Genesis server to
+  enable: true                            # Enable node selector
+  labels:                                 # Node selector to deploy the Genesis server to
+    juno-innovations.com/service: "true"
+
+
+# add ons
+ingress: false
+gpu_operator: false
+autoscaler: false
+metrics_server: false
+
+# DO NOT CHANGE
+
+# injected from pulumi infrastructure. No need to fill these out
+region: "us-east-1"
+file_system: "1234789"
+account: "263151681"
+subnet: "32165181"
+account_id: "23151651"

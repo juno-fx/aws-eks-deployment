@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bootstrap
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+
+  # We use the multi source approach to allow for the use of a private values repo
+  # https://argo-cd.readthedocs.io/en/stable/user-guide/multiple_sources/
+  sources:
+    - path: bootstrap
+      repoURL: https://github.com/juno-fx/aws-eks-deployment.git
+      targetRevision: updated-bootstrap-example
+      helm:
+        valueFiles:
+          - $values/bootstrap/test-values.yaml
+
+    - repoURL: https://github.com/juno-fx/aws-eks-deployment.git
+      targetRevision: updated-bootstrap-example
+      ref: values
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+
+    syncOptions:
+      - CreateNamespace=true

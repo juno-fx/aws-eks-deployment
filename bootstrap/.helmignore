@@ -1,0 +1,6 @@
+.devbox
+.tools
+.kind
+devbox.json
+devbox.lock
+Makefile
