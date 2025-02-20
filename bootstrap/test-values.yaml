@@ -1,14 +1,8 @@
-# PROJECTS
-
 # Genesis configuration values
-image_pull_secret:                        # Image pull secret to use for the project. This is the name of the secret in the namespace
-
-image: genesis:v0.0.2                     # Image to pull for Genesis
-env: {}                                   # Environment variables to set for the Genesis server
-node_selector:                            # Node selector to deploy the Genesis server to
-  enable: true                            # Enable node selector
-  labels:                                 # Node selector to deploy the Genesis server to
-    juno-innovations.com/service: "true"
+repository: https://github.com/juno-fx/Genesis-Deployment.git     # Repository to pull the Genesis helm chart from
+version: v1.0                                                     # Official Genesis helm chart version to use
+image_pull_secret:                                                # Image pull secret to use for the project. This is the name of the secret in the namespace
+env: {}                                                           # Environment variables to set for the Genesis server
 
 
 # add ons
