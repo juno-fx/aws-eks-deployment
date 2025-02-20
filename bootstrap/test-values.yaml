@@ -1,13 +1,14 @@
 # PROJECTS
 
-projects:
-  - name: BOB
-    active: false
-    guid: 3500
-    region: us-east-1
-    orion:
-      repo: https://github.com/juno-fx/Orion-Deployment.git
-      branch: v1.1
+# Genesis configuration values
+image_pull_secret:                        # Image pull secret to use for the project. This is the name of the secret in the namespace
+
+image: genesis:v0.0.2                     # Image to pull for Genesis
+env: {}                                   # Environment variables to set for the Genesis server
+node_selector:                            # Node selector to deploy the Genesis server to
+  enable: true                            # Enable node selector
+  labels:                                 # Node selector to deploy the Genesis server to
+    juno-innovations.com/service: "true"
 
 
 # add ons

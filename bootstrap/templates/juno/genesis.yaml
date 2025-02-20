@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: genesis
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  sources:
+    - repoURL: {{ .Values.repository }}
+      path: .
+      targetRevision: {{ .Values.version }}
+      helm:
+        parameters:
+          - name: "host"
+            value: "{{ .Values.region }}-genesis.{{ .Values.domain }}"
+          {{- if .Values.image_pull_secret }}
+          - name: "image_pull_secret"
+            value: "{{ .Values.image_pull_secret }}"
+          {{- end }}
+          - name: "registry"
+            value: "{{ .Values.account_id }}.dkr.ecr.{{ .Values.region }}.amazonaws.com"
+          - name: "env.NEXTAUTH_URL"
+            value: "https://{{ .Values.region }}-genesis.{{ .Values.domain }}/api/auth"
+          {{- range $key, $value := .Values.env }}
+          - name: "env.{{ $key }}"
+            value: {{ $value }}
+          {{- end }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+      - CreateNamespace=true

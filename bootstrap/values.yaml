@@ -1,13 +1,9 @@
-# PROJECTS
+# Genesis configuration values
+repository: https://github.com/juno-fx/Genesis-Deployment.git     # Repository to pull the Genesis helm chart from
+image_pull_secret:                                                # Image pull secret to use for the project. This is the name of the secret in the namespace
+version:                                                          # Image to pull for Genesis
+env: {}                                                           # Environment variables to set for the Genesis server
 
-projects:
-  - name: BOB
-    active: true
-    guid: 3500
-    region: us-east-1
-    repo: https://github.com/juno-fx/Orion-Deployment.git
-    orion:
-      branch: v1.1
 
 
 # BOOTSTRAP CONFIGURATION
