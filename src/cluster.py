@@ -6,6 +6,7 @@ Handle VPC setup for a target region.
 import base64
 import os
 from ipaddress import IPv4Network
+from json import dumps
 from typing import Union, Dict, List
 from enum import Enum
 
@@ -384,6 +385,9 @@ class Cluster:
             addon_name="vpc-cni",
             resolve_conflicts_on_create="OVERWRITE",
             opts=ResourceOptions(parent=namespace, provider=self.context.provider),
+            configuration_values=dumps({
+                "enableNetworkPolicy": "true"
+            })
         )
 
         aws.eks.Addon(
