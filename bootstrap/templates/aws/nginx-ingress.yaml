@@ -16,8 +16,8 @@ spec:
       helm:
         releaseName: ingress-nginx
         parameters:
-          - name: "controller.nodeSelector.juno-innovations\.com/service"
-            value: "true"
+{{/*          - name: "controller.nodeSelector.juno-innovations\.com/service"*/}}
+{{/*            value: "true"*/}}
           - name: "controller.service.external"
             value: "false"
           - name: "controller.service.internal"
