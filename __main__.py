@@ -13,9 +13,10 @@ set_session("Cosmos")  # this is a trackable session name
 
 # bootstrap
 Cluster.set_bootstrap_repository(
-    repository="https://github.com/juno-fx/aws-eks-infrastructure.git",
+    repository="https://github.com/juno-fx/aws-eks-deployment.git",
     path="bootstrap/",
-    ref="3-private-cluster-support"
+    ref="3-private-cluster-support",
+    domain="juno-innovations.com"
 )
 
 # ECR repositories

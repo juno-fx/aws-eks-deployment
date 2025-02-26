@@ -63,15 +63,17 @@ class Cluster:
     BOOTSTRAP_REPOSITORY = None
     BOOTSTRAP_PATH = "."
     BOOTSTRAP_REF = "main"
+    BOOTSTRAP_DOMAIN = None
 
     @staticmethod
-    def set_bootstrap_repository(repository: str, path: str, ref: str):
+    def set_bootstrap_repository(repository: str, path: str, ref: str, domain: str):
         """
         Set the bootstrap repository
         """
         Cluster.BOOTSTRAP_REPOSITORY = repository
         Cluster.BOOTSTRAP_PATH = path
         Cluster.BOOTSTRAP_REF = ref
+        Cluster.BOOTSTRAP_DOMAIN = domain
 
     class CapacityType(Enum):
         SPOT = "SPOT"
@@ -479,6 +481,7 @@ class Cluster:
                 "subnet": self.production_subnet.id,
                 "account_id": get_context().account_id,
                 "private": 'true' if self.private else 'false',
+                "domain": Cluster.BOOTSTRAP_DOMAIN,
             },
         )
         tag = context_prefix()
@@ -499,15 +502,15 @@ class Cluster:
             )
         )
 
-        # helm.Chart(
-        #     f"{context_prefix()}-juno-bootstrap",
-        #     helm.LocalChartOpts(**args),
-        #     opts=ResourceOptions(
-        #         provider=self.argo_provider,
-        #         depends_on=[wait],
-        #         parent=argo
-        #     ),
-        # )
+        helm.Chart(
+            f"{context_prefix()}-juno-bootstrap",
+            helm.LocalChartOpts(**args),
+            opts=ResourceOptions(
+                provider=self.argo_provider,
+                depends_on=[wait],
+                parent=argo
+            ),
+        )
 
     def add_node_group(
         self,

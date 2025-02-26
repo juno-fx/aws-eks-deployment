@@ -9,23 +9,25 @@ spec:
     server: https://kubernetes.default.svc
     namespace: argocd
   sources:
-    - path: {{ .Values.path }}
-      repoURL: {{ .Values.repository }}
-      targetRevision: {{ .Values.ref }}
+    - path: "{{ .Values.path }}"
+      repoURL: "{{ .Values.repository }}"
+      targetRevision: "{{ .Values.ref }}"
       helm:
         parameters:
           - name: region
-            value: {{ .Values.region }}
+            value: "{{ .Values.region }}"
           - name: file_system
-            value: {{ .Values.file_system }}
+            value: "{{ .Values.file_system }}"
           - name: account
-            value: {{ .Values.account }}
+            value: "{{ .Values.account }}"
           - name: subnet
-            value: {{ .Values.subnet }}
+            value: "{{ .Values.subnet }}"
           - name: account_id
             value: "{{ .Values.account_id }}"
           - name: private
             value: "{{ .Values.private }}"
+          - name: domain
+            value: "{{ .Values.domain }}"
   syncPolicy:
     automated:
       prune: true
