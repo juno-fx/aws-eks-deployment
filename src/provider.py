@@ -18,12 +18,23 @@ if TYPE_CHECKING:
 # globals
 CONTEXT: Union["JunoRegion", None] = None
 ACCOUNT: Union["JunoAccount", None] = None
+CLUSTER: Union[str, None] = None
+
+
+def set_cluster(cluster: Union[str, None]):
+    """
+    Set the current cluster
+    """
+    global CLUSTER
+    CLUSTER = cluster
 
 
 def context_prefix() -> str:
     """
     Return the current context prefix
     """
+    if CLUSTER:
+        return f"{CONTEXT.account}-{CONTEXT.region}-{CLUSTER}"
     return f"{CONTEXT.account}-{CONTEXT.region}"
 
 
