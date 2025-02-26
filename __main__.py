@@ -39,12 +39,14 @@ Cluster.set_bootstrap_repository(
 with JunoAccount("Production"):
     with JunoRegion("us-east-1", ecr_master=True):
         with Cluster(private=True) as cluster:
-            pass
-            # cluster.add_node_group(
-            #     name="service",
-            #     instances=["c6a.xlarge", "t3.xlarge"],
-            #     capacity_type=cluster.CapacityType.SPOT,
-            #     minimum=1,
-            #     size=1,
-            #     maximum=5,
-            # )
+            cluster.add_node_group(
+                name="service",
+                instances=["c6a.xlarge", "t3.xlarge"],
+                capacity_type=cluster.CapacityType.SPOT,
+                minimum=1,
+                size=1,
+                maximum=5,
+                labels={
+                    "juno-innovations.com/service": "true"
+                }
+            )

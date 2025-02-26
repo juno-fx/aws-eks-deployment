@@ -3,6 +3,7 @@ Handle account switching in the Juno AWS Organizations
 """
 
 # std
+import hashlib
 from typing import Union, Dict, TYPE_CHECKING
 
 # 3rd
@@ -33,9 +34,13 @@ def context_prefix() -> str:
     """
     Return the current context prefix
     """
+    prefix = f"{CONTEXT.account}-{CONTEXT.region}"
     if CLUSTER:
-        return f"{CONTEXT.account}-{CONTEXT.region}-{CLUSTER}"
-    return f"{CONTEXT.account}-{CONTEXT.region}"
+        prefix = f"{prefix}-{CLUSTER}"
+    hasher = hashlib.sha3_512()
+    hasher.update(prefix.encode())
+    prefix = hasher.hexdigest()[0::5][:6]
+    return prefix.lower()
 
 
 def context_export(name, target):

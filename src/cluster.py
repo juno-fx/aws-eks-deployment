@@ -11,6 +11,7 @@ from typing import Union, Dict, List
 from enum import Enum
 
 # 3rd
+from pulumiverse_time import Sleep
 from pulumi import ResourceOptions
 from pulumi_aws.ec2 import (
     RouteTable,
@@ -99,7 +100,7 @@ class Cluster:
         self.route_table: Union[RouteTable, None] = None
 
         # cluster
-        name = '-cluster-private' if self.private else '-cluster'
+        name = '-private' if self.private else '-public'
         self.cluster: Union[EksCluster, None] = None
         self.cluster_name: str = f"{context_prefix()}{name}"
         self.base_node_role: Union[Role, None] = None
@@ -135,7 +136,8 @@ class Cluster:
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        # self.bootstrap()
+        if self.nodes:
+            self.bootstrap()
         set_cluster(None)
 
     def build_storage(self):
@@ -356,6 +358,7 @@ class Cluster:
         self.k8s_provider = k8s.Provider(
             f"{context_prefix()}-deployment-provider",
             kubeconfig=self.cluster.kubeconfig,
+            enable_server_side_apply=True,
             opts=ResourceOptions(parent=self.cluster, depends_on=self.nodes),
         )
 
@@ -414,12 +417,11 @@ class Cluster:
             f"{context_prefix()}-argocd",
             file="https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml",
             resource_prefix=context_prefix(),
-            skip_await=False,
             opts=ResourceOptions(parent=namespace, provider=self.argo_provider),
         )
 
         # Begin Juno Bootstrap
-        secret = k8s.core.v1.Secret(
+        k8s.core.v1.Secret(
             f"{context_prefix()}-github-secret",
             metadata=k8s.meta.v1.ObjectMetaArgs(
                 name="github-token",
@@ -442,7 +444,7 @@ class Cluster:
             cluster_name=self.cluster_name,
             addon_name="vpc-cni",
             resolve_conflicts_on_create="OVERWRITE",
-            opts=ResourceOptions(parent=namespace, provider=self.context.provider),
+            opts=ResourceOptions(parent=self.cluster, provider=self.context.provider),
             configuration_values=dumps({"enableNetworkPolicy": "true"}),
         )
 
@@ -451,7 +453,7 @@ class Cluster:
             cluster_name=self.cluster_name,
             addon_name="aws-ebs-csi-driver",
             resolve_conflicts_on_create="OVERWRITE",
-            opts=ResourceOptions(parent=namespace, provider=self.context.provider),
+            opts=ResourceOptions(parent=self.cluster, provider=self.context.provider),
         )
 
         aws.eks.Addon(
@@ -459,7 +461,7 @@ class Cluster:
             cluster_name=self.cluster_name,
             addon_name="aws-efs-csi-driver",
             resolve_conflicts_on_create="OVERWRITE",
-            opts=ResourceOptions(parent=namespace, provider=self.context.provider),
+            opts=ResourceOptions(parent=self.cluster, provider=self.context.provider),
         )
 
         chart_path = f"{os.path.dirname(__file__)}/chart"
@@ -470,6 +472,7 @@ class Cluster:
             values={
                 "repository": Cluster.BOOTSTRAP_REPOSITORY,
                 "path": Cluster.BOOTSTRAP_PATH,
+                "ref": Cluster.BOOTSTRAP_REF,
                 "region": get_context().region,
                 "file_system": self.file_system.dns_name.apply(lambda x: x),
                 "account": get_context().account,
@@ -478,20 +481,31 @@ class Cluster:
                 "private": 'true' if self.private else 'false',
             },
         )
+        tag = context_prefix()
+        args["resource_prefix"] = tag
+        args["values"]["prefix"] = f"{tag}-"
 
-        encoded = str(base64.b64encode(context_prefix().lower().encode("utf-8")))
-        encoded = encoded.replace("=", "").replace("b", "").replace("'", "")
 
-        if get_context().region != "us-east-1":
-            tag = encoded[0:5].lower()
-            args["resource_prefix"] = tag
-            args["values"]["prefix"] = f"{tag}-"
+        # Pulumi's k8s ConfigFile resource is not respecting the depends_on order and the
+        # CRD's for ArgoCD are not being set into for the Helm Chart which causes it to
+        # fail in a race condition. To get around this, I am setting a 2 minute sleep to
+        # hold the helm chart back and allow pulumi to traverse the dependencies correctly
+        # from the ConfigFile.
+        wait = Sleep(
+            f"{context_prefix()}-wait-for-argocd-crds",
+            create_duration="5m",
+            opts=ResourceOptions(
+                parent=argo
+            )
+        )
 
         helm.Chart(
-            f"{context_prefix().lower()}-juno-bootstrap",
+            f"{context_prefix()}-juno-bootstrap",
             helm.LocalChartOpts(**args),
             opts=ResourceOptions(
-                parent=secret, provider=self.argo_provider, depends_on=[secret, argo]
+                provider=self.argo_provider,
+                depends_on=[wait],
+                parent=argo
             ),
         )
 
@@ -518,7 +532,6 @@ class Cluster:
         if not labels:
             labels = {}
 
-        labels["junovfx/node"] = name
         instances.sort()
         args = dict(
             cluster=self.cluster,
@@ -526,7 +539,7 @@ class Cluster:
             capacity_type=capacity_type.value,
             instance_types=instances,
             disk_size=150,
-            subnet_ids=[self.subnet.id],
+            subnet_ids=[self.production_subnet.id],
             labels=labels,
             taints=[],
             scaling_config={

@@ -1,10 +1,8 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ .Values.prefix }}bootstrap
+  name: juno-bootstrap
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "-1"
 spec:
   project: default
   destination:
@@ -13,7 +11,7 @@ spec:
   sources:
     - path: {{ .Values.path }}
       repoURL: {{ .Values.repository }}
-      targetRevision: main
+      targetRevision: {{ .Values.ref }}
       helm:
         parameters:
           - name: region
@@ -26,12 +24,12 @@ spec:
             value: {{ .Values.subnet }}
           - name: account_id
             value: "{{ .Values.account_id }}"
-
+          - name: private
+            value: "{{ .Values.private }}"
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
       allowEmpty: true
-
     syncOptions:
       - CreateNamespace=true
