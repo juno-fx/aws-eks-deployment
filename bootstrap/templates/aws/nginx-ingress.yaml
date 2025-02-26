@@ -1,0 +1,32 @@
+{{- if .Values.gpu_operator }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ingress-nginx
+  sources:
+    - repoURL: https://kubernetes.github.io/ingress-nginx
+      chart: ingress-nginx
+      targetRevision: 4.12.0
+      helm:
+        releaseName: ingress-nginx
+        parameters:
+          - name: "controller.nodeSelector.juno-innovations\.com/service"
+            value: "true"
+          - name: "controller.service.external"
+            value: "false"
+          - name: "controller.service.internal"
+            value: "true"
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+      - CreateNamespace=true
+{{- end }}
