@@ -499,15 +499,15 @@ class Cluster:
             )
         )
 
-        helm.Chart(
-            f"{context_prefix()}-juno-bootstrap",
-            helm.LocalChartOpts(**args),
-            opts=ResourceOptions(
-                provider=self.argo_provider,
-                depends_on=[wait],
-                parent=argo
-            ),
-        )
+        # helm.Chart(
+        #     f"{context_prefix()}-juno-bootstrap",
+        #     helm.LocalChartOpts(**args),
+        #     opts=ResourceOptions(
+        #         provider=self.argo_provider,
+        #         depends_on=[wait],
+        #         parent=argo
+        #     ),
+        # )
 
     def add_node_group(
         self,

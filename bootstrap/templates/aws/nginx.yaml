@@ -528,7 +528,7 @@ spec:
               readOnly: true
       dnsPolicy: ClusterFirst
       nodeSelector:
-        junovfx/node: service
+        juno-innovations.com/service: "true"
       serviceAccountName: ingress-nginx
       terminationGracePeriodSeconds: 300
       volumes:
