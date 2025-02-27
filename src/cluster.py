@@ -178,7 +178,9 @@ class Cluster:
             ),
         )
 
-    def create_subnet(self, name: str, cidr: str, zone: str, private: bool = False, associate=True):  # noqa: PLR0913
+    def create_subnet(  # noqa: PLR0913
+        self, name: str, cidr: str, zone: str, private: bool = False, associate: bool = True
+    ):
         """
         Create a subnet
         """
