@@ -16,9 +16,8 @@ def load_custom_policies() -> List[Policy]:
     """
     Load custom policies into the account
     """
-    # need to do this here because of the circular import :(
-    # pylint: disable=import-outside-toplevel
-    from .provider import juno_account_resource
+    # need to do this here because of the circular import
+    from .provider import juno_account_resource  # noqa: PLC0415
 
     policies = []
     custom_policies = os.path.abspath(f"{__file__}/../../custom_policies")
@@ -39,9 +38,8 @@ def load_custom_roles() -> List[Role]:
     """
     Load custom roles into the account
     """
-    # need to do this here because of the circular import :(
-    # pylint: disable=import-outside-toplevel
-    from .provider import juno_account_resource
+    # need to do this here because of the circular import
+    from .provider import juno_account_resource  # noqa: PLC0415
 
     roles = []
     custom_roles = os.path.abspath(f"{__file__}/../../custom_roles")
@@ -61,8 +59,7 @@ def eks_node_role() -> Role:
     Create a role for EKS nodes
     """
     # need to do this here because of the circular import :(
-    # pylint: disable=import-outside-toplevel
-    from .provider import juno_account_resource, get_account
+    from .provider import juno_account_resource, get_account  # noqa: PLC0415
 
     account = get_account().account
 

@@ -82,8 +82,7 @@ def set_account(account: "JunoAccount" = None):
     ACCOUNT = account
 
 
-# pylint: disable=too-many-arguments
-def _build_resource_opts(
+def _build_resource_opts(  # noqa: PLR0917 PLR0913
     name: str,
     opts: dict,
     tags: dict,

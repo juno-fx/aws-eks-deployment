@@ -3,7 +3,6 @@ Handle VPC setup for a target region.
 """
 
 # std
-import base64
 import os
 from ipaddress import IPv4Network
 from json import dumps
@@ -179,7 +178,7 @@ class Cluster:
             ),
         )
 
-    def create_subnet(self, name: str, cidr: str, zone: str, private: bool = False, associate=True):
+    def create_subnet(self, name: str, cidr: str, zone: str, private: bool = False, associate=True):  # noqa: PLR0913
         """
         Create a subnet
         """
@@ -208,7 +207,8 @@ class Cluster:
         """
         Build out networking for the service subnet to serve private subnets
         """
-        # service subnet needs to have public access so traffic can be routed through the NAT gateway
+        # service subnet needs to have public access so traffic can be
+        # routed through the NAT gateway
         self.service_subnet = self.create_subnet(
             "service", self.service_cidr, self.production_zone, private=False
         )
@@ -407,7 +407,8 @@ class Cluster:
             opts=ResourceOptions(parent=self.cluster, provider=self.k8s_provider),
         )
 
-    def validate_twingate(self) -> dict:
+    @staticmethod
+    def validate_twingate() -> dict:
         """
         Validate Twingate configuration
         """
@@ -538,7 +539,7 @@ class Cluster:
             opts=ResourceOptions(provider=self.argo_provider, depends_on=[wait], parent=argo),
         )
 
-    def add_node_group(
+    def add_node_group(  # noqa: PLR0917 PLR0913
         self,
         name: str,
         instances: List[str],
@@ -546,8 +547,9 @@ class Cluster:
         size: int,
         maximum: int = None,
         minimum: int = None,
-        resource_name: str = None,
         labels: Dict[str, str] = None,
+        taints: List[str] = None,
+        gpu: bool = False,
     ):
         """
         Create a node group for the project cluster
@@ -570,7 +572,10 @@ class Cluster:
             disk_size=150,
             subnet_ids=[self.production_subnet.id],
             labels=labels,
-            taints=[],
+            taints=[
+                NodeGroupTaintArgs(effect="NO_SCHEDULE", key=taint, value="true")
+                for taint in taints
+            ],
             scaling_config={
                 "desired_size": size,
                 "min_size": minimum,
@@ -586,16 +591,9 @@ class Cluster:
             ami_type="AL2_x86_64",
         )
 
-        if name in ("workstation", "render"):
+        if gpu:
             args["ami_type"] = "AL2_x86_64_GPU"
             args["disk_size"] = 70
-            args["taints"].append(
-                NodeGroupTaintArgs(effect="NO_SCHEDULE", key=f"junovfx/{name}", value="true")
-            )
-
-        # noinspection PyTypeChecker
-        if resource_name is not None:
-            name = resource_name
 
         self.nodes.append(
             ManagedNodeGroup(
