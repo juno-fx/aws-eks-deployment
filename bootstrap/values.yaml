@@ -14,7 +14,6 @@ headlamp: true
 gpu_operator: true
 autoscaler: true
 metrics_server: true
-twingate: true
 
 # twingate configuration
 twingate_config:

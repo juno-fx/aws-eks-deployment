@@ -424,9 +424,9 @@ class Cluster:
             if not tg_network_id:
                 raise ValueError("TWINGATE_NETWORK_ID must be set in the environment for Twingate")
             values = {
-                "twingate_config.api_key": tg_api_key,
-                "twingate_config.network": tg_network,
-                "twingate_config.network_id": tg_network_id,
+                "twingate_api_key": tg_api_key,
+                "twingate_network": tg_network,
+                "twingate_remote_network_id": tg_network_id,
             }
         return values
 
@@ -532,11 +532,11 @@ class Cluster:
             opts=ResourceOptions(parent=argo),
         )
 
-        # helm.Chart(
-        #     f"{context_prefix()}-juno-bootstrap",
-        #     helm.LocalChartOpts(**args),
-        #     opts=ResourceOptions(provider=self.argo_provider, depends_on=[wait], parent=argo),
-        # )
+        helm.Chart(
+            f"{context_prefix()}-juno-bootstrap",
+            helm.LocalChartOpts(**args),
+            opts=ResourceOptions(provider=self.argo_provider, depends_on=[wait], parent=argo),
+        )
 
     def add_node_group(
         self,

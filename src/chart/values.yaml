@@ -10,7 +10,7 @@ ref:
 private:
 domain:
 
-twingate_config:
-  api_key:
-  network:
-  remote_network_id:
+# handoff for twingate
+twingate_api_key:
+twingate_network:
+twingate_remote_network_id:
