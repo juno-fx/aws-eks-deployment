@@ -354,6 +354,8 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
+    {{- if .Values.private }}
+    {{- else }}
     alb.ingress.kubernetes.io/load-balancer-name: "k8s-nlb"
     service.beta.kubernetes.io/aws-load-balancer-subnets: "{{ .Values.subnet }}"
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
@@ -365,6 +367,7 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-healthcheck-healthy-threshold: "2"
     service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
     service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: proxy_protocol_v2.enabled=true
+    {{- end }}
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/instance: ingress-nginx
@@ -374,7 +377,10 @@ metadata:
   name: ingress-nginx-controller
   namespace: ingress-nginx
 spec:
+  {{- if .Values.private }}
+  {{- else }}
   externalTrafficPolicy: Local
+  {{- end }}
   ipFamilies:
     - IPv4
   ipFamilyPolicy: SingleStack
