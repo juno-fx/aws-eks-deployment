@@ -34,96 +34,96 @@ spec:
     syncOptions:
       - CreateNamespace=true
 ---
-apiVersion: twingate.com/v1beta
-kind: TwingateConnector
-metadata:
-  name: juno-connector
-  namespace: twingate-operator
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
-spec:
-  imagePolicy:
-    provider: dockerhub
-    schedule: "0 0 * * *"
----
-apiVersion: twingate.com/v1beta
-kind: TwingateResource
-metadata:
-  name: argo-server
-  namespace: twingate-operator
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
-spec:
-  name: {{ .Values.prefix }}-{{ .Values.region }}-argo
-  address: ingress-nginx-controller.ingress-nginx.svc.cluster.local
-  alias: {{ .Values.prefix }}-{{ .Values.region }}.{{ .Values.domain }}
-  protocols:
-    tcp:
-      policy: RESTRICTED
-      ports:
-        - start: 80
-          end: 80
-        - start: 443
-          end: 443
-    udp:
-      policy: RESTRICTED
-      ports:
-        - start: 80
-          end: 80
-        - start: 443
-          end: 443
----
-apiVersion: twingate.com/v1beta
-kind: TwingateResource
-metadata:
-  name: headlamp-server
-  namespace: twingate-operator
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
-spec:
-  name: {{ .Values.prefix }}-{{ .Values.region }}-headlamp
-  address: ingress-nginx-controller.ingress-nginx.svc.cluster.local
-  alias: {{ .Values.prefix }}-{{ .Values.region }}-access.{{ .Values.domain }}
-  protocols:
-    tcp:
-      policy: RESTRICTED
-      ports:
-        - start: 80
-          end: 80
-        - start: 443
-          end: 443
-    udp:
-      policy: RESTRICTED
-      ports:
-        - start: 80
-          end: 80
-        - start: 443
-          end: 443
----
-apiVersion: twingate.com/v1beta
-kind: TwingateResource
-metadata:
-  name: genesis-server
-  namespace: twingate-operator
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
-spec:
-  name: {{ .Values.prefix }}-{{ .Values.region }}-genesis
-  address: ingress-nginx-controller.ingress-nginx.svc.cluster.local
-  alias: {{ .Values.prefix }}-{{ .Values.region }}-genesis.{{ .Values.domain }}
-  protocols:
-    tcp:
-      policy: RESTRICTED
-      ports:
-        - start: 80
-          end: 80
-        - start: 443
-          end: 443
-    udp:
-      policy: RESTRICTED
-      ports:
-        - start: 80
-          end: 80
-        - start: 443
-          end: 443
+{{/*apiVersion: twingate.com/v1beta*/}}
+{{/*kind: TwingateConnector*/}}
+{{/*metadata:*/}}
+{{/*  name: juno-connector*/}}
+{{/*  namespace: twingate-operator*/}}
+{{/*  annotations:*/}}
+{{/*    argocd.argoproj.io/sync-wave: "2"*/}}
+{{/*spec:*/}}
+{{/*  imagePolicy:*/}}
+{{/*    provider: dockerhub*/}}
+{{/*    schedule: "0 0 * * *"*/}}
+{{/*---*/}}
+{{/*apiVersion: twingate.com/v1beta*/}}
+{{/*kind: TwingateResource*/}}
+{{/*metadata:*/}}
+{{/*  name: argo-server*/}}
+{{/*  namespace: twingate-operator*/}}
+{{/*  annotations:*/}}
+{{/*    argocd.argoproj.io/sync-wave: "2"*/}}
+{{/*spec:*/}}
+{{/*  name: {{ .Values.prefix }}-{{ .Values.region }}-argo*/}}
+{{/*  address: ingress-nginx-controller.ingress-nginx.svc.cluster.local*/}}
+{{/*  alias: {{ .Values.prefix }}-{{ .Values.region }}.{{ .Values.domain }}*/}}
+{{/*  protocols:*/}}
+{{/*    tcp:*/}}
+{{/*      policy: RESTRICTED*/}}
+{{/*      ports:*/}}
+{{/*        - start: 80*/}}
+{{/*          end: 80*/}}
+{{/*        - start: 443*/}}
+{{/*          end: 443*/}}
+{{/*    udp:*/}}
+{{/*      policy: RESTRICTED*/}}
+{{/*      ports:*/}}
+{{/*        - start: 80*/}}
+{{/*          end: 80*/}}
+{{/*        - start: 443*/}}
+{{/*          end: 443*/}}
+{{/*---*/}}
+{{/*apiVersion: twingate.com/v1beta*/}}
+{{/*kind: TwingateResource*/}}
+{{/*metadata:*/}}
+{{/*  name: headlamp-server*/}}
+{{/*  namespace: twingate-operator*/}}
+{{/*  annotations:*/}}
+{{/*    argocd.argoproj.io/sync-wave: "2"*/}}
+{{/*spec:*/}}
+{{/*  name: {{ .Values.prefix }}-{{ .Values.region }}-headlamp*/}}
+{{/*  address: ingress-nginx-controller.ingress-nginx.svc.cluster.local*/}}
+{{/*  alias: {{ .Values.prefix }}-{{ .Values.region }}-access.{{ .Values.domain }}*/}}
+{{/*  protocols:*/}}
+{{/*    tcp:*/}}
+{{/*      policy: RESTRICTED*/}}
+{{/*      ports:*/}}
+{{/*        - start: 80*/}}
+{{/*          end: 80*/}}
+{{/*        - start: 443*/}}
+{{/*          end: 443*/}}
+{{/*    udp:*/}}
+{{/*      policy: RESTRICTED*/}}
+{{/*      ports:*/}}
+{{/*        - start: 80*/}}
+{{/*          end: 80*/}}
+{{/*        - start: 443*/}}
+{{/*          end: 443*/}}
+{{/*---*/}}
+{{/*apiVersion: twingate.com/v1beta*/}}
+{{/*kind: TwingateResource*/}}
+{{/*metadata:*/}}
+{{/*  name: genesis-server*/}}
+{{/*  namespace: twingate-operator*/}}
+{{/*  annotations:*/}}
+{{/*    argocd.argoproj.io/sync-wave: "2"*/}}
+{{/*spec:*/}}
+{{/*  name: {{ .Values.prefix }}-{{ .Values.region }}-genesis*/}}
+{{/*  address: ingress-nginx-controller.ingress-nginx.svc.cluster.local*/}}
+{{/*  alias: {{ .Values.prefix }}-{{ .Values.region }}-genesis.{{ .Values.domain }}*/}}
+{{/*  protocols:*/}}
+{{/*    tcp:*/}}
+{{/*      policy: RESTRICTED*/}}
+{{/*      ports:*/}}
+{{/*        - start: 80*/}}
+{{/*          end: 80*/}}
+{{/*        - start: 443*/}}
+{{/*          end: 443*/}}
+{{/*    udp:*/}}
+{{/*      policy: RESTRICTED*/}}
+{{/*      ports:*/}}
+{{/*        - start: 80*/}}
+{{/*          end: 80*/}}
+{{/*        - start: 443*/}}
+{{/*          end: 443*/}}
 {{- end }}
