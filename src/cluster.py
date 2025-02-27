@@ -46,7 +46,6 @@ from .security import SecuritySpec
 from .context.session import get_profile
 
 
-# pylint: disable=invalid-name
 azs = get_availability_zones(state="available").names
 
 
@@ -205,7 +204,7 @@ class Cluster:
             **juno_resource(name, opts=dict(depends_on=[parent], parent=parent)),
         )
 
-    def build_service_networking(self, internet_gateway) -> NatGateway:
+    def build_service_networking(self, internet_gateway: InternetGateway) -> NatGateway:
         """
         Build out networking for the service subnet to serve private subnets
         """
