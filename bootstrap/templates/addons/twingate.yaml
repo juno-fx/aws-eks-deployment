@@ -10,7 +10,7 @@ spec:
   project: default
   destination:
     server: https://kubernetes.default.svc
-    namespace: gpu-operator
+    namespace: twingate-operator
   sources:
     - repoURL: https://github.com/Twingate/kubernetes-operator
       path: ./deploy/twingate-operator
@@ -36,6 +36,7 @@ apiVersion: twingate.com/v1beta
 kind: TwingateConnector
 metadata:
   name: juno-connector
+  namespace: twingate-operator
 spec:
   imagePolicy:
     provider: dockerhub
@@ -45,6 +46,7 @@ apiVersion: twingate.com/v1beta
 kind: TwingateResource
 metadata:
   name: argo-server
+  namespace: twingate-operator
 spec:
   name: Argo Server
   address: ingress-nginx-controller.ingress-nginx.cluster.local
@@ -54,6 +56,7 @@ apiVersion: twingate.com/v1beta
 kind: TwingateResource
 metadata:
   name: headlamp-server
+  namespace: twingate-operator
 spec:
   name: Headlamp Server
   address: ingress-nginx-controller.ingress-nginx.cluster.local
