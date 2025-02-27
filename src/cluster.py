@@ -564,6 +564,9 @@ class Cluster:
         if not labels:
             labels = {}
 
+        if not taints:
+            taints = []
+
         instances.sort()
         args = dict(
             cluster=self.cluster,
