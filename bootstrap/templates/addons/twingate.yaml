@@ -49,7 +49,7 @@ metadata:
   namespace: twingate-operator
 spec:
   name: Argo Server
-  address: ingress-nginx-controller.ingress-nginx.cluster.local
+  address: ingress-nginx-controller.ingress-nginx.svc.cluster.local
   alias: {{ .Values.region }}.{{ .Values.domain }}
 ---
 apiVersion: twingate.com/v1beta
@@ -59,6 +59,6 @@ metadata:
   namespace: twingate-operator
 spec:
   name: Headlamp Server
-  address: ingress-nginx-controller.ingress-nginx.cluster.local
+  address: ingress-nginx-controller.ingress-nginx.svc.cluster.local
   alias: {{ .Values.region }}-access.{{ .Values.domain }}
 {{- end }}
