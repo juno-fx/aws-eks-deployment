@@ -174,7 +174,7 @@ spec:
               name: tmp-dir
       nodeSelector:
         kubernetes.io/os: linux
-        junovfx/node: service
+        juno-innovations.com/service: "true"
       priorityClassName: system-cluster-critical
       serviceAccountName: metrics-server
       volumes:

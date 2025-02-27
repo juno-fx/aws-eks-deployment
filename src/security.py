@@ -1,4 +1,3 @@
-# pylint: disable=too-few-public-methods,unused-wildcard-import,wildcard-import
 """
 Security settings
 """

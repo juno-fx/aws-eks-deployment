@@ -8,13 +8,14 @@ from pulumi_aws.iam import (
     RolePolicyAttachment,
     RolePolicyAttachmentArgs,
 )
+from pulumi_aws.ec2 import Subnet
 
 # local
 from .provider import context_prefix
 from . import policies
 
 
-def build_node_role(cluster, parent):
+def build_node_role(cluster: str, parent: Subnet) -> Role:
     """
     Build the node role for the EKS cluster
     """

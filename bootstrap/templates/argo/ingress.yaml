@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: {{ .Values.region }}.{{ .Values.domain }}
+    - host: {{ .Values.prefix }}-{{ .Values.region }}.{{ .Values.domain }}
       http:
         paths:
           - path: /

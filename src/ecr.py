@@ -2,6 +2,9 @@
 ECR Handler
 """
 
+# std
+from typing import List
+
 # 3rd
 from pulumi_aws.ecr import (
     Repository,
@@ -45,7 +48,7 @@ def get_ecr() -> "ECR":
     return ecr
 
 
-def set_repositories(repos):
+def set_repositories(repos: List[str]):
     """
     Set the repositories for the ECR handler
     """

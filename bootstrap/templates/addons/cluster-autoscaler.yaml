@@ -139,7 +139,7 @@ spec:
         prometheus.io/port: '8085'
     spec:
       nodeSelector:
-        junovfx/node: service
+        juno-innovations.com/service: "true"
       priorityClassName: system-cluster-critical
       securityContext:
         runAsNonRoot: true

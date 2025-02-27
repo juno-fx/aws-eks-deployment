@@ -3,6 +3,7 @@ Handle account switching in the Juno AWS Organizations
 """
 
 # std
+import hashlib
 from typing import Union, Dict, TYPE_CHECKING
 
 # 3rd
@@ -18,13 +19,28 @@ if TYPE_CHECKING:
 # globals
 CONTEXT: Union["JunoRegion", None] = None
 ACCOUNT: Union["JunoAccount", None] = None
+CLUSTER: Union[str, None] = None
+
+
+def set_cluster(cluster: Union[str, None]):
+    """
+    Set the current cluster
+    """
+    global CLUSTER
+    CLUSTER = cluster
 
 
 def context_prefix() -> str:
     """
     Return the current context prefix
     """
-    return f"{CONTEXT.account}-{CONTEXT.region}"
+    prefix = f"{CONTEXT.account}-{CONTEXT.region}"
+    if CLUSTER:
+        prefix = f"{prefix}-{CLUSTER}"
+    hasher = hashlib.sha3_512()
+    hasher.update(prefix.encode())
+    prefix = hasher.hexdigest()[0::5][:6]
+    return prefix.lower()
 
 
 def context_export(name, target):
@@ -66,8 +82,7 @@ def set_account(account: "JunoAccount" = None):
     ACCOUNT = account
 
 
-# pylint: disable=too-many-arguments
-def _build_resource_opts(
+def _build_resource_opts(  # noqa: PLR0917 PLR0913
     name: str,
     opts: dict,
     tags: dict,

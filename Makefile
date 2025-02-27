@@ -20,10 +20,10 @@ install-dev:
 install: venv install-prod install-dev
 
 format:
-	@$(ACTIVATE) ruff format src
+	@$(ACTIVATE) ruff format src --preview
 
 lint:
-	@$(ACTIVATE) ruff check src --fix
+	@$(ACTIVATE) ruff check src --fix --preview
 
 up:
 	@$(ACTIVATE) AWS_PROFILE=$(PROFILE) pulumi up --stack juno

@@ -348,21 +348,26 @@ metadata:
   name: ingress-nginx-controller
   namespace: ingress-nginx
 ---
+# Reference for lb annotations
+# https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.2/guide/service/annotations/
 apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    service.beta.kubernetes.io/aws-load-balancer-name: "k8s-nlb"
+    {{- if .Values.private }}
+    {{- else }}
+    alb.ingress.kubernetes.io/load-balancer-name: "k8s-nlb"
     service.beta.kubernetes.io/aws-load-balancer-subnets: "{{ .Values.subnet }}"
-    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
-    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: 'true'
-    service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "false"
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
     service.beta.kubernetes.io/aws-load-balancer-healthcheck-interval: "10"
     service.beta.kubernetes.io/aws-load-balancer-healthcheck-timeout: "10"
     service.beta.kubernetes.io/aws-load-balancer-healthcheck-unhealthy-threshold: "2"
     service.beta.kubernetes.io/aws-load-balancer-healthcheck-healthy-threshold: "2"
     service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
     service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: proxy_protocol_v2.enabled=true
+    {{- end }}
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/instance: ingress-nginx
@@ -372,7 +377,10 @@ metadata:
   name: ingress-nginx-controller
   namespace: ingress-nginx
 spec:
+  {{- if .Values.private }}
+  {{- else }}
   externalTrafficPolicy: Local
+  {{- end }}
   ipFamilies:
     - IPv4
   ipFamilyPolicy: SingleStack
@@ -391,7 +399,11 @@ spec:
     app.kubernetes.io/component: controller
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
+  {{- if .Values.private }}
+  type: ClusterIP
+  {{- else }}
   type: LoadBalancer
+  {{- end }}
 ---
 apiVersion: v1
 kind: Service
@@ -521,7 +533,7 @@ spec:
               readOnly: true
       dnsPolicy: ClusterFirst
       nodeSelector:
-        junovfx/node: service
+        juno-innovations.com/service: "true"
       serviceAccountName: ingress-nginx
       terminationGracePeriodSeconds: 300
       volumes:

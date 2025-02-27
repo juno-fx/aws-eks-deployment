@@ -30,5 +30,5 @@ spec:
             initialDelaySeconds: 30
             timeoutSeconds: 30
       nodeSelector:
-        'kubernetes.io/os': linux
+        juno-innovations.com/service: "true"
 {{- end }}
