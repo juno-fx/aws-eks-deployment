@@ -9,3 +9,8 @@ path:
 ref:
 private:
 domain:
+
+twingate_config:
+  api_key:
+  network:
+  remote_network_id:

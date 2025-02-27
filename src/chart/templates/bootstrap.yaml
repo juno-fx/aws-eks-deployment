@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: juno-bootstrap
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   destination:
@@ -14,20 +16,28 @@ spec:
       targetRevision: "{{ .Values.ref }}"
       helm:
         parameters:
-          - name: region
+          - name: "region"
             value: "{{ .Values.region }}"
-          - name: file_system
+          - name: "file_system"
             value: "{{ .Values.file_system }}"
-          - name: account
+          - name: "account"
             value: "{{ .Values.account }}"
-          - name: subnet
+          - name: "subnet"
             value: "{{ .Values.subnet }}"
-          - name: account_id
+          - name: "account_id"
             value: "{{ .Values.account_id }}"
-          - name: private
+          - name: "private"
             value: "{{ .Values.private }}"
-          - name: domain
+          - name: "domain"
             value: "{{ .Values.domain }}"
+          {{- if .Values.twingate_config.api_key }}
+          - name: "twingate_config.api_key"
+            value: "{{ .Values.twingate_config.api_key }}"
+          - name: "twingate_config.network"
+            value: "{{ .Values.twingate_config.network }}"
+          - name: "twingate_config.remote_network_id"
+            value: "{{ .Values.twingate_config.remote_network_id }}"
+          {{- end }}
   syncPolicy:
     automated:
       prune: true

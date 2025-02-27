@@ -361,6 +361,8 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
     {{- if .Values.private }}
     service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
+    # for some reason the below works but the above doesn't? Yet the
+    # above is what is recommended? We need to keep an eye on this.
     service.beta.kubernetes.io/aws-load-balancer-internal: "true"
     {{- end }}
     service.beta.kubernetes.io/aws-load-balancer-healthcheck-interval: "10"

@@ -83,7 +83,7 @@ class Cluster:
         """
         Setup regional Cluster
         """
-        set_cluster('private' if private else 'public')
+        set_cluster("private" if private else "public")
 
         # instance variables
         self.context = get_context()
@@ -102,7 +102,7 @@ class Cluster:
         self.route_table: Union[RouteTable, None] = None
 
         # cluster
-        name = '-private' if self.private else '-public'
+        name = "-private" if self.private else "-public"
         self.cluster: Union[EksCluster, None] = None
         self.cluster_name: str = f"{context_prefix()}{name}"
         self.base_node_role: Union[Role, None] = None
@@ -119,8 +119,11 @@ class Cluster:
         self.production_zone = self.availability_zones[0]
         self.dropped_zone = self.availability_zones[1]
 
+        enabled = True if self.validate_twingate() else False
+
         print(f"Cluster: {self.cluster_name}")
         print(f"\tPrivate: {self.private}")
+        print(f"\tTwingate Enabled: {enabled}")
         print(f"\tProduction CIDR: {self.production_cidr}")
         print(f"\tService CIDR: {self.service_cidr}")
         print(f"\tDropped CIDR: {self.dropped_cidr}")
@@ -259,7 +262,11 @@ class Cluster:
 
         # Production subnet
         self.production_subnet = self.create_subnet(
-            "production", self.production_cidr, self.production_zone, private=self.private, associate=False
+            "production",
+            self.production_cidr,
+            self.production_zone,
+            private=self.private,
+            associate=False,
         )
 
         # this subnet doesn't need to ever be public
@@ -400,6 +407,29 @@ class Cluster:
             opts=ResourceOptions(parent=self.cluster, provider=self.k8s_provider),
         )
 
+    def validate_twingate(self) -> dict:
+        """
+        Validate Twingate configuration
+        """
+        # twingate setup
+        tg_api_key = os.environ.get("TWINGATE_API_KEY")
+        tg_network = os.environ.get("TWINGATE_NETWORK")
+        tg_network_id = os.environ.get("TWINGATE_NETWORK_ID")
+        values = {}
+        if tg_api_key or tg_network or tg_network_id:
+            if not tg_api_key:
+                raise ValueError("TWINGATE_API_KEY must be set in the environment for Twingate")
+            if not tg_network:
+                raise ValueError("TWINGATE_NETWORK must be set in the environment for Twingate")
+            if not tg_network_id:
+                raise ValueError("TWINGATE_NETWORK_ID must be set in the environment for Twingate")
+            values = {
+                "twingate_config.api_key": tg_api_key,
+                "twingate_config.network": tg_network,
+                "twingate_config.network_id": tg_network_id,
+            }
+        return values
+
     def bootstrap(self):
         """
         Bootstrap the cluster
@@ -480,14 +510,16 @@ class Cluster:
                 "account": get_context().account,
                 "subnet": self.production_subnet.id,
                 "account_id": get_context().account_id,
-                "private": 'true' if self.private else 'false',
+                "private": "true" if self.private else "false",
                 "domain": Cluster.BOOTSTRAP_DOMAIN,
             },
         )
+
+        # twingate setup
+        args["values"].update(self.validate_twingate())
         tag = context_prefix()
         args["resource_prefix"] = tag
         args["values"]["prefix"] = f"{tag}-"
-
 
         # Pulumi's k8s ConfigFile resource is not respecting the depends_on order and the
         # CRD's for ArgoCD are not being set into for the Helm Chart which causes it to
@@ -497,20 +529,14 @@ class Cluster:
         wait = Sleep(
             f"{context_prefix()}-wait-for-argocd-crds",
             create_duration="5m",
-            opts=ResourceOptions(
-                parent=argo
-            )
+            opts=ResourceOptions(parent=argo),
         )
 
-        helm.Chart(
-            f"{context_prefix()}-juno-bootstrap",
-            helm.LocalChartOpts(**args),
-            opts=ResourceOptions(
-                provider=self.argo_provider,
-                depends_on=[wait],
-                parent=argo
-            ),
-        )
+        # helm.Chart(
+        #     f"{context_prefix()}-juno-bootstrap",
+        #     helm.LocalChartOpts(**args),
+        #     opts=ResourceOptions(provider=self.argo_provider, depends_on=[wait], parent=argo),
+        # )
 
     def add_node_group(
         self,
