@@ -16,6 +16,8 @@ spec:
       targetRevision: "{{ .Values.ref }}"
       helm:
         parameters:
+          - name: "prefix"
+            value: "{{ .Values.prefix }}"
           - name: "region"
             value: "{{ .Values.region }}"
           - name: "file_system"

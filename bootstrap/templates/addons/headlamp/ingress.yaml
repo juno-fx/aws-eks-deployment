@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: {{ .Values.region }}-access.{{ .Values.domain }}
+    - host: {{ .Values.prefix }}-{{ .Values.region }}-access.{{ .Values.domain }}
       http:
         paths:
           - path: /

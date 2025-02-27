@@ -497,10 +497,12 @@ class Cluster:
         )
 
         chart_path = f"{os.path.dirname(__file__)}/chart"
+        tag = context_prefix()
 
         args = dict(
             path=chart_path,
             namespace="argocd",
+            resource_prefix=tag,
             values={
                 "repository": Cluster.BOOTSTRAP_REPOSITORY,
                 "path": Cluster.BOOTSTRAP_PATH,
@@ -512,14 +514,12 @@ class Cluster:
                 "account_id": get_context().account_id,
                 "private": "true" if self.private else "false",
                 "domain": Cluster.BOOTSTRAP_DOMAIN,
+                "prefix": tag,
             },
         )
 
         # twingate setup
         args["values"].update(self.validate_twingate())
-        tag = context_prefix()
-        args["resource_prefix"] = tag
-        args["values"]["prefix"] = f"{tag}-"
 
         # Pulumi's k8s ConfigFile resource is not respecting the depends_on order and the
         # CRD's for ArgoCD are not being set into for the Helm Chart which causes it to

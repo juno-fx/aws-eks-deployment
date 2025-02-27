@@ -25,7 +25,7 @@ spec:
           - name: "registry"
             value: "{{ .Values.account_id }}.dkr.ecr.{{ .Values.region }}.amazonaws.com"
           - name: "env.NEXTAUTH_URL"
-            value: "https://{{ .Values.region }}-genesis.{{ .Values.domain }}/api/auth"
+            value: "https://{{ .Values.prefix }}-{{ .Values.region }}-genesis.{{ .Values.domain }}/api/auth"
           {{- range $key, $value := .Values.env }}
           - name: "env.{{ $key }}"
             value: {{ $value }}
