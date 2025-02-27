@@ -4,6 +4,8 @@ kind: Application
 metadata:
   name: twingate-operator
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -37,6 +39,8 @@ kind: TwingateConnector
 metadata:
   name: juno-connector
   namespace: twingate-operator
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   imagePolicy:
     provider: dockerhub
@@ -47,6 +51,8 @@ kind: TwingateResource
 metadata:
   name: argo-server
   namespace: twingate-operator
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   name: {{ .Values.prefix }}-{{ .Values.region }}-argo
   address: ingress-nginx-controller.ingress-nginx.svc.cluster.local
@@ -72,6 +78,8 @@ kind: TwingateResource
 metadata:
   name: headlamp-server
   namespace: twingate-operator
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   name: {{ .Values.prefix }}-{{ .Values.region }}-headlamp
   address: ingress-nginx-controller.ingress-nginx.svc.cluster.local
@@ -97,6 +105,8 @@ kind: TwingateResource
 metadata:
   name: genesis-server
   namespace: twingate-operator
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   name: {{ .Values.prefix }}-{{ .Values.region }}-genesis
   address: ingress-nginx-controller.ingress-nginx.svc.cluster.local

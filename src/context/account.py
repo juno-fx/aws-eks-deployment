@@ -50,30 +50,6 @@ class JunoAccount:
         )
         self.partition = aws.get_partition(opts=InvokeOptions(provider=self.account_provider))
 
-        self.setup_iam_users()
-
-    def setup_iam_users(self):
-        """
-        Setup IAM users for the account
-        """
-        ecr_user = User(
-            f"{self.account}-ecr-user",
-            opts=ResourceOptions(parent=self.account_provider, provider=self.account_provider),
-        )
-
-        UserPolicyAttachment(
-            f"{self.account}-ecr-user-attachment",
-            user=ecr_user.name,
-            policy_arn="arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess",
-            opts=ResourceOptions(parent=ecr_user, provider=self.account_provider),
-        )
-
-        AccessKey(
-            f"{self.account}-ecr-user-keys",
-            user=ecr_user.name,
-            opts=ResourceOptions(parent=ecr_user, provider=self.account_provider),
-        )
-
     def __enter__(self):
         # set account context
         set_account(self)

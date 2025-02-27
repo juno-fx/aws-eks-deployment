@@ -34,7 +34,6 @@ from pulumi_eks import (
     ClusterNodeGroupOptionsArgs,
 )
 from pulumi_aws.eks import NodeGroupTaintArgs
-import pulumi_command as cmd
 import pulumi_aws as aws
 from pulumi_aws.efs import FileSystem, MountTarget
 from pulumi_aws.ec2.security_group import SecurityGroup
@@ -354,15 +353,6 @@ class Cluster:
                 ),
             ),
             opts=ResourceOptions(parent=self.base_node_role, provider=self.context.provider),
-        )
-
-        cmd.local.Command(
-            f"{context_prefix()}-export-kubeconfig",
-            cmd.local.CommandArgs(
-                create=f"echo $KUBECONFIG >  {self.cluster_name}.kubeconfig",
-                environment={"KUBECONFIG": self.cluster.get_kubeconfig()},
-            ),
-            opts=ResourceOptions(parent=self.cluster),
         )
 
         self.k8s_provider = k8s.Provider(
