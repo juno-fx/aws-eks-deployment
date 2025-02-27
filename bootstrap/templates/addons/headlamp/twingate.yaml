@@ -47,7 +47,7 @@ metadata:
   name: argo-server
 spec:
   name: Argo Server
-  address: argo-server.argocd.cluster.local
+  address: ingress-nginx-controller.ingress-nginx.cluster.local
   alias: {{ .Values.region }}.{{ .Values.domain }}
 ---
 apiVersion: twingate.com/v1beta
@@ -56,6 +56,6 @@ metadata:
   name: headlamp-server
 spec:
   name: Headlamp Server
-  address: headlamp.kube-system.cluster.local
+  address: ingress-nginx-controller.ingress-nginx.cluster.local
   alias: {{ .Values.region }}-access.{{ .Values.domain }}
 {{- end }}
