@@ -38,6 +38,7 @@ metadata:
   name: juno-connector
 spec:
   imagePolicy:
+    provider: dockerhub
     schedule: "0 0 * * *"
 ---
 apiVersion: twingate.com/v1beta
