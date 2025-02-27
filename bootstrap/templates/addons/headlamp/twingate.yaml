@@ -31,4 +31,30 @@ spec:
       allowEmpty: true
     syncOptions:
       - CreateNamespace=true
+---
+apiVersion: twingate.com/v1beta
+kind: TwingateConnector
+metadata:
+  name: juno-connector
+spec:
+  imagePolicy:
+    schedule: "0 0 * * *"
+---
+apiVersion: twingate.com/v1beta
+kind: TwingateResource
+metadata:
+  name: argo-server
+spec:
+  name: Argo Server
+  address: argo-server.argocd.cluster.local
+  alias: {{ .Values.region }}.{{ .Values.domain }}
+---
+apiVersion: twingate.com/v1beta
+kind: TwingateResource
+metadata:
+  name: headlamp-server
+spec:
+  name: Headlamp Server
+  address: headlamp.kube-system.cluster.local
+  alias: {{ .Values.region }}-access.{{ .Values.domain }}
 {{- end }}
