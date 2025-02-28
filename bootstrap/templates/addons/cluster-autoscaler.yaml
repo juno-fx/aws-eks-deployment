@@ -174,7 +174,11 @@ spec:
             - --expander=least-waste,priority
             - --scale-down-unneeded-time={{ .Values.scaleDownTime }}
             - --unremovable-node-recheck-timeout=1m
-            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/{{ .Values.account }}-{{ .Values.region }}-cluster
+            {{- if .Values.private }}
+            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/{{ .Values.prefix }}-private
+            {{- else }}
+            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/{{ .Values.prefix }}-public
+            {{- end }}
             - --scale-down-delay-after-add=2m0s
             - --aws-use-static-instance-list=false
           volumeMounts:
