@@ -4,8 +4,6 @@ version: v1.0                                                     # Official Gen
 image_pull_secret:                                                # Image pull secret to use for the project. This is the name of the secret in the namespace
 env: {}                                                           # Environment variables to set for the Genesis server
 
-
-
 # BOOTSTRAP CONFIGURATION
 
 # add ons
@@ -14,15 +12,6 @@ headlamp: true
 gpu_operator: true
 autoscaler: true
 metrics_server: true
-
-# twingate configuration
-twingate_config:
-  api_key:
-  network:
-  remote_network_id:
-
-# specify the domain that the ingress will listen on i.e. "junovfx.com"
-domain:
 
 # nginx certs
 # nginx default cert for ingress <namespace>/<secret>
@@ -41,6 +30,7 @@ scaleUpTime: 5s
 # DO NOT CHANGE
 
 # injected from pulumi infrastructure. No need to fill these out
+domain:
 region:
 file_system:
 account:
@@ -48,3 +38,7 @@ subnet:
 account_id:
 private:
 prefix:
+twingate_config:
+  api_key:
+  network:
+  remote_network_id:
