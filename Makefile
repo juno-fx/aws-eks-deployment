@@ -28,5 +28,8 @@ lint:
 up:
 	@$(ACTIVATE) AWS_PROFILE=$(PROFILE) pulumi up --stack juno
 
+down:
+	@$(ACTIVATE) AWS_PROFILE=$(PROFILE) pulumi destroy --stack juno
+
 refresh:
 	@$(ACTIVATE) PULUMI_K8S_DELETE_UNREACHABLE=true AWS_PROFILE=$(PROFILE) pulumi refresh --stack juno

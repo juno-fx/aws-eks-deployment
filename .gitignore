@@ -155,3 +155,5 @@ Thumbs.db
 # pycharm
 .idea
 .venv
+
+.env

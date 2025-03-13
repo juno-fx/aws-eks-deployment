@@ -3,6 +3,7 @@ Handle region switching in the Juno AWS Organizations
 """
 
 # 3rd
+import boto3
 from pulumi import ResourceOptions, get_stack
 import pulumi_aws as aws
 
@@ -22,7 +23,7 @@ PROVIDERS = {}
 
 
 class JunoRegion:
-    def __init__(self, region: str, ecr_master: bool = False, ecr_sync: bool = False):
+    def __init__(self, region: str, ecr_master: bool = False, ecr_sync: bool = False , admin_role: str = "OrganizationAccountAccessRole"):
         account = get_account()
 
         # instance variables
@@ -32,7 +33,7 @@ class JunoRegion:
         self.account = account.account
         self.context_only = False
         self.account_id = account.account_id
-        self.role_arn = f"arn:aws:iam::{self.account_id}:role/OrganizationAccountAccessRole"
+        self.role_arn = f"arn:aws:iam::{self.account_id}:role/{admin_role}"
 
         args = dict(profile=get_profile(), allowed_account_ids=[self.account_id], region=region)
         if self.account != "root":

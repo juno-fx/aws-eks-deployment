@@ -19,3 +19,5 @@ ruff==0.3.5
 semver==2.13.0
 six==1.16.0
 urllib3==2.2.1
+boto3
+python-dotenv
