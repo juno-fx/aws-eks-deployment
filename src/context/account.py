@@ -19,21 +19,6 @@ def get_current_account_id():
     org = aws.organizations.get_organization()
     return org.master_account_id
 
-# Get The current account ARN to build the environment
-def get_current_user_arn():
-    client = boto3.client('sts')
-    user_arn = client.get_caller_identity().get('Arn')
-    return user_arn
-
-# Verify the current account can create the resources
-def has_administrator_access(user_name):
-    iam_client = boto3.client('iam')
-    attached_policies = iam_client.list_attached_user_policies(UserName=user_name)
-    for policy in attached_policies['AttachedPolicies']:
-        if policy['PolicyName'] == 'AdministratorAccess':
-            return True
-    return False
-
 # account hooks
 # these are functions that will be called when the account is initialized
 # they are filtered by stack name. So if you want to only run a hook for
@@ -50,43 +35,17 @@ class JunoAccount:
     def set_root_account(account):
         JunoAccount.ROOT_ACCOUNT = account
 
-    def __init__(self, account: str):
+    def __init__(self, account: str, admin_role: str = "OrganizationAccountAccessRole", account_id: str = None):
         # instance variables
         self.account = "root" if account == JunoAccount.ROOT_ACCOUNT else account
-        # self.account_object = [acct for acct in organization.accounts if acct.name == account][0]
-        self.account_id = get_current_account_id()
-        if has_administrator_access(self.account):
-            current_user_arn = get_current_user_arn()
-            role = aws.iam.Role(
-                '{self.account}-OrganizationAccountAccessRole',
-                assume_role_policy=f"""
-                {{
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {{
-                            "Effect": "Allow",
-                            "Principal": {{
-                                "AWS": "{current_user_arn}"
-                            }},
-                            "Action": "sts:AssumeRole"
-                        }}
-                    ]
-                }}
-                """
-            )
-            admin_policy_attachment = aws.iam.RolePolicyAttachment(
-                'adminPolicyAttachment',
-                role=role.name,
-                policy_arn='arn:aws:iam::aws:policy/AdministratorAccess'
-            )
-        else:
-            raise ValueError("Please Create user with the default aws roles an permission for the deployment ")
         
-
+        # Get user ID if account not specified 
+        self.account_id = account_id if account_id else get_current_account_id()
+        
         args = dict(allowed_account_ids=[self.account_id])
         if self.account != "root":
             args["assume_role"] = aws.ProviderAssumeRoleArgs(
-                role_arn=f"arn:aws:iam::{self.account_id}:role/{self.account}-OrganizationAccountAccessRole",
+                role_arn=f"arn:aws:iam::{self.account_id}:role/{admin_role}",
                 session_name=get_session(),
             )
 

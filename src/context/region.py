@@ -21,31 +21,9 @@ from .session import get_session, get_profile
 REGION_HOOKS = {}
 PROVIDERS = {}
 
-# Get The Account ID for the organization
-def get_current_account_id():
-    org = aws.organizations.get_organization()
-    return org.master_account_id
-
-# Get The current account ARN to build the environment
-def get_current_user_arn():
-    client = boto3.client('sts')
-    user_arn = client.get_caller_identity().get('Arn')
-    return user_arn
-
-# Verify the current account can create the resources
-def has_administrator_access(user_name):
-    iam_client = boto3.client('iam')
-    attached_policies = iam_client.list_attached_user_policies(UserName=user_name)
-    for policy in attached_policies['AttachedPolicies']:
-        if policy['PolicyName'] == 'AdministratorAccess':
-            return True
-    return False
-
-
-
 
 class JunoRegion:
-    def __init__(self, region: str, ecr_master: bool = False, ecr_sync: bool = False):
+    def __init__(self, region: str, ecr_master: bool = False, ecr_sync: bool = False , admin_role: str = "OrganizationAccountAccessRole"):
         account = get_account()
 
         # instance variables
@@ -54,8 +32,8 @@ class JunoRegion:
         self.region = region
         self.account = account.account
         self.context_only = False
-        self.account_id = get_current_account_id()
-        self.role_arn = f"arn:aws:iam::{self.account_id}:role/{self.account}-OrganizationAccountAccessRole"
+        self.account_id = account.account_id
+        self.role_arn = f"arn:aws:iam::{self.account_id}:role/{admin_role}"
 
         args = dict(profile=get_profile(), allowed_account_ids=[self.account_id], region=region)
         if self.account != "root":
