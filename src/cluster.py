@@ -467,6 +467,7 @@ class Cluster:
             f"{context_prefix()}-vpc-cni",
             cluster_name=self.cluster_name,
             addon_name="vpc-cni",
+            addon_version="v1.19.2-eksbuild.5",
             resolve_conflicts_on_create="OVERWRITE",
             opts=ResourceOptions(parent=self.cluster, provider=self.context.provider),
             configuration_values=dumps({"enableNetworkPolicy": "true"}),
@@ -476,6 +477,7 @@ class Cluster:
             f"{context_prefix()}-aws-ebs-csi-driver",
             cluster_name=self.cluster_name,
             addon_name="aws-ebs-csi-driver",
+            addon_version="v1.39.0-eksbuild.1",
             resolve_conflicts_on_create="OVERWRITE",
             opts=ResourceOptions(parent=self.cluster, provider=self.context.provider),
         )
@@ -484,6 +486,7 @@ class Cluster:
             f"{context_prefix()}-aws-efs-csi-driver",
             cluster_name=self.cluster_name,
             addon_name="aws-efs-csi-driver",
+            addon_version="v2.1.4-eksbuild.1",
             resolve_conflicts_on_create="OVERWRITE",
             opts=ResourceOptions(parent=self.cluster, provider=self.context.provider),
         )
