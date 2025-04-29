@@ -3,8 +3,8 @@ Handle account switching in the Juno AWS Organizations
 """
 
 # 3rd
-from pulumi_aws.iam import User, UserPolicyAttachment, AccessKey
-from pulumi import get_stack, InvokeOptions, ResourceOptions
+import boto3
+from pulumi import get_stack, InvokeOptions
 import pulumi_aws as aws
 
 # local
@@ -13,7 +13,11 @@ from ..provider import set_account
 from .session import get_session
 
 # Juno org
-organization = aws.organizations.get_organization()
+
+# Get The Account ID for the organization
+def get_current_account_id():
+    org = aws.organizations.get_organization()
+    return org.master_account_id
 
 # account hooks
 # these are functions that will be called when the account is initialized
@@ -31,16 +35,17 @@ class JunoAccount:
     def set_root_account(account):
         JunoAccount.ROOT_ACCOUNT = account
 
-    def __init__(self, account: str):
+    def __init__(self, account: str, admin_role: str = "OrganizationAccountAccessRole", account_id: str = None):
         # instance variables
         self.account = "root" if account == JunoAccount.ROOT_ACCOUNT else account
-        self.account_object = [acct for acct in organization.accounts if acct.name == account][0]
-        self.account_id = self.account_object.id
-
+        
+        # Get user ID if account not specified 
+        self.account_id = account_id if account_id else get_current_account_id()
+        
         args = dict(allowed_account_ids=[self.account_id])
         if self.account != "root":
             args["assume_role"] = aws.ProviderAssumeRoleArgs(
-                role_arn=f"arn:aws:iam::{self.account_id}:role/OrganizationAccountAccessRole",
+                role_arn=f"arn:aws:iam::{self.account_id}:role/{admin_role}",
                 session_name=get_session(),
             )
 

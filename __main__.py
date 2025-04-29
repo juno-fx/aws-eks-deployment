@@ -1,6 +1,8 @@
 """
 Juno Innovations - EKS Infrastructure for Orion
 """
+from dotenv import load_dotenv
+load_dotenv()
 # local
 from src import JunoAccount, JunoRegion, Cluster, set_repositories, set_profile, set_session
 
@@ -39,6 +41,48 @@ set_repositories([
 ])
 
 
+
+
+
+# account in standalone in personal setup 
+# Steps to create a role with the option to select a trusted entity (current account or remote account):
+# 
+# 1. Navigate to the IAM Console:
+#    Open the AWS Management Console, go to the IAM (Identity and Access Management) service,
+#    and select "Roles" from the left-hand navigation pane. Click on the "Create role" button
+#    to start the role creation process.
+# 
+# 2. Select Trusted Entity:
+#    Choose the type of trusted entity for the role. You can select "AWS account" to specify
+#    either the current account or a remote account. If you choose "Another AWS account," you
+#    will need to enter the Account ID of the remote account.
+# 
+# 3. Define Permissions:
+#    Attach the necessary permissions policies to the role. These policies define what actions
+#    the role can perform. Make sure that the define role can create VPC , Nodegroup , EKS , internet gateway Security group and IAM roles with the account 
+# 
+# 4. Configure Role Settings:
+#    Provide a name and description for the role, and review the trust policy. The trust policy
+#    specifies which entities (accounts) are allowed to assume the role
+
+
+
+# Those value are necessary on user account without organization role
+# But is usefull for standolone practice of when someone grant an assume role to their account 
+assume_role_name =  "JunoAdmin"
+
+
+# Stand Alone Example For personal account not link to an organization
+#with JunoAccount("deployment_account_name" ,  admin_role=assume_role_name ):                    # this is the account that will be used to deploy the clusters and also the the role it will assume at creation 
+#    with JunoRegion("us-east-1", ecr_master=True ,  admin_role=assume_role_name  ):        # this is the region that the clusters will be deployed to it need the assume role name to follow along an do impersonation 
+#        pass
+
+# Stand Alone Example with permission to assume another oganization roles 
+#with JunoAccount("deployment_account_name" , account_id="changemetospecificaccountid" ,  admin_role=assume_role_name ):                    # this is the account that will be used to deploy the clusters and also the the role it will assume at creation 
+#    with JunoRegion("us-east-1", ecr_master=True ,  admin_role=assume_role_name  ):        # this is the region that the clusters will be deployed to it need the assume role name to follow along an do impersonation 
+#        pass
+
+
 # account and regional deployments
 with JunoAccount("deployment_account_name"):                    # this is the account that will be used to deploy the clusters
     with JunoRegion("us-east-1", ecr_master=True):        # this is the region that the clusters will be deployed to
@@ -50,8 +94,8 @@ with JunoAccount("deployment_account_name"):                    # this is the ac
         #         name="service",
         #         instances=["c6a.xlarge", "t3.xlarge"],
         #         capacity_type=cluster.CapacityType.SPOT,
-        #         minimum=1,
-        #         size=1,
+        #         minimum=2,
+        #         size=2,
         #         maximum=5,
         #         labels={
         #             "juno-innovations.com/service": "true"
